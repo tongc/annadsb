@@ -30,18 +30,14 @@
 			var editor = ace.edit("editor");
 			editor.$blockScrolling = Infinity;		
 		    editor.setTheme("ace/theme/twilight");
-		    editor.getSession().setMode("ace/mode/json");		
+		    editor.getSession().setMode("ace/mode/json");	
 
 		    var editorSample = ace.edit("sample");
 			editorSample.$blockScrolling = Infinity;		
 		    editorSample.setTheme("ace/theme/eclipse");
 		    editorSample.getSession().setMode("ace/mode/json");
 
-			$.getJSON(ANNA_DSB_PROJECT_URL + README_URL, function(data) {
-				$("#readme").load(data.download_url);
-			});
-			$.getJSON(ANNA_DSB_PROJECT_URL + JSON_SCHEMA_URL, function(data) {
-				$("<ul id='root'/>").appendTo($("#tree"));
+		    function buildDirOrFile(data) {
 				$.each( data, function( key, parentVal ) {
 				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo($("#root"));
 				    $("<ul id='ul" + parentVal.name + "'/>").appendTo($("#" + parentVal.name));
@@ -53,7 +49,15 @@
 						});				
 
 					});
-				});					
+				});	
+		    }
+
+			$.getJSON(ANNA_DSB_PROJECT_URL + README_URL, function(data) {
+				$("#readme").load(data.download_url);
+			});
+			$.getJSON(ANNA_DSB_PROJECT_URL + JSON_SCHEMA_URL, function(data) {
+				$("<ul id='root'/>").appendTo($("#tree"));
+				buildDirOrFile(data);				
 			});
 
 			setTimeout(function(){
@@ -70,7 +74,7 @@
 					    editor.setValue(data, 1);
 					});					
 				});	
-				
+
 				$("#s").submit(function(e) {
 				    e.preventDefault();
 				    $('#tree').jstree(true).search($("#q").val());
