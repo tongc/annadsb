@@ -45,13 +45,13 @@
 
 					$.getJSON(parentVal.url, function(data) {					
 						$.each( data, function( key, val ) {
-							if(parentVal.type === 'dir') {
-								buildDirOrFile(data, $('#ul' + parentVal.name));
-							} else {						
+							// if(val.type === 'dir') {
+								// buildDirOrFile(data, $('#ul' + parentVal.name));
+							// } else {						
 						    	$("<li id='" + val.name + "'>" + val.name + "</li>")
 						    		.appendTo($('#ul' + parentVal.name));
 						    	itemNameToUrlMap[val.name] = val.download_url;					    
-							}
+							// }
 						});			
 					});
 				});	
