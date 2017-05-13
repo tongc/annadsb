@@ -9,7 +9,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-json.js"></script>	
 	</head>
 	<body>
-		<h2>ANNA DSB GITHUB README</h2>
+		<h2>GITHUB README</h2>
 		<div id="readme"></div>
 		<form id="s">
 		    <input type="search" id="q" />
@@ -22,7 +22,7 @@
 		</div>
 
 		<script type="text/javascript">
-			var ANNA_DSB_PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
+			var PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
 			var OPEN_ISSUES_URL = "issues?state=open";
 			var README_URL = "readme";
 			var JSON_SCHEMA_URL = "contents/UAT/JSON";
@@ -57,10 +57,10 @@
 				});	
 		    }
 
-			$.getJSON(ANNA_DSB_PROJECT_URL + README_URL, function(data) {
+			$.getJSON(PROJECT_URL + README_URL, function(data) {
 				$("#readme").load(data.download_url);
 			});
-			$.getJSON(ANNA_DSB_PROJECT_URL + JSON_SCHEMA_URL, function(data) {
+			$.getJSON(PROJECT_URL + JSON_SCHEMA_URL, function(data) {
 				$("<ul id='root'/>").appendTo($("#tree"));
 				buildDirOrFile(data, $("#root"));				
 			});
