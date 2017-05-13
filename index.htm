@@ -22,10 +22,10 @@
 		</div>
 
 		<script type="text/javascript">
-			var ANNA_DSB_PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
+			var ANNA_DSB_PROJECT_URL = "https://api.github.com/repos/fge/sample-json-schemas/";
 			var OPEN_ISSUES_URL = "issues?state=open";
 			var README_URL = "readme";
-			var JSON_SCHEMA_URL = "contents/UAT/JSON";
+			var JSON_SCHEMA_URL = "contents/json-home";
 			var itemNameToUrlMap = {};
 			var editor = ace.edit("editor");
 			editor.$blockScrolling = Infinity;		
@@ -37,22 +37,22 @@
 		    editorSample.setTheme("ace/theme/eclipse");
 		    editorSample.getSession().setMode("ace/mode/json");
 
+			var fileItems = [];
 		    function buildDirOrFile(data, parentElement) {
 				$.each( data, function( key, parentVal ) {
 				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo(parentElement);
 				    $("<ul id='ul" + parentVal.name + "'/>").appendTo($("#" + parentVal.name));
-					if(parentVal.type === 'dir') {
-						buildDirOrFile($('#ul' + parentVal.name));
-					}
-				    
-					$.getJSON(parentVal.url, function(data) {
-						var innerItems = [];
-						$.each( data, function( key, val ) {
-						    $("<li id='" + val.name + "'>" + val.name + "</li>")
-						    .appendTo($('#ul' + parentVal.name));
-						    itemNameToUrlMap[val.name] = val.download_url;					    
-						});				
 
+					$.getJSON(parentVal.url, function(data) {					
+						$.each( data, function( key, val ) {
+							if(parentVal.type === 'dir') {
+								buildDirOrFile(data, $('#ul' + parentVal.name));
+							} else {						
+						    	$("<li id='" + val.name + "'>" + val.name + "</li>")
+						    		.appendTo($('#ul' + parentVal.name));
+						    	itemNameToUrlMap[val.name] = val.download_url;					    
+							}
+						});			
 					});
 				});	
 		    }
