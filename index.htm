@@ -37,36 +37,28 @@
 		    editorSample.setTheme("ace/theme/eclipse");
 		    editorSample.getSession().setMode("ace/mode/json");
 
-			var fileItems = [];
-		    function buildDirOrFile(data, parentElement) {
-				$.each( data, function( key, parentVal ) {
-				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo(parentElement);
-				    $("<ul id='ul" + parentVal.name + "'/>").appendTo($("#" + parentVal.name));
-
-					$.getJSON(parentVal.url, function(data) {					
-						$.each( data, function( key, val ) {
-							// if(val.type === 'dir') {
-								// buildDirOrFile(data, $('#ul' + parentVal.name));
-							// } else {						
-						    	$("<li id='" + val.name + "'>" + val.name + "</li>")
-						    		.appendTo($('#ul' + parentVal.name));
-						    	itemNameToUrlMap[val.name] = val.download_url;					    
-							// }
-						});			
+			function buildDirOrFile(path, parentElementId) {
+				$.getJSON(path, function(data) {
+					$("<ul id='ul" + parentElementId + "'/>").appendTo($("#" + parentElementId));
+					$.each(data, function(key, val) {
+						var elementId = parentElementId + "_" + val.name;
+				    	$("<li id='" + elementId + "'>" + val.name + "</li>")
+				    		.appendTo($('#ul' + parentElementId));					
+				    	if(val.type === 'dir') {
+							buildDirOrFile(val.url, elementId);
+						} else {
+							itemNameToUrlMap[elementId] = val.download_url;
+						}
 					});
-				});	
-		    }
+				});
+			}
 
 			$.getJSON(PROJECT_URL + README_URL, function(data) {
 				$("#readme").load(data.download_url);
 			});
-			$.getJSON(PROJECT_URL + JSON_SCHEMA_URL, function(data) {
-				$("<ul id='root'/>").appendTo($("#tree"));
-				buildDirOrFile(data, $("#root"));				
-			});
-
+			buildDirOrFile(PROJECT_URL + JSON_SCHEMA_URL, "tree");
 			setTimeout(function(){
-				$('#tree').jstree({
+				$('#tree').jstree({		  		
 				  "plugins" : [
 				    "search", "sort"
 				  ]
