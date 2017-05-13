@@ -7,6 +7,9 @@
 		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-json.js"></script>	
+		<style type="text/css">
+		 .jstree li > a > .jstree-icon {  display:none !important; } 
+		</style>		
 	</head>
 	<body>
 		<h2>GITHUB README</h2>
@@ -53,12 +56,24 @@
 				});
 			}
 
+			// $.ajax({
+			// 	url: PROJECT_URL + README_URL,
+			// 	type: 'GET',
+			// 	dataType: 'json',
+			// 	headers: {"access_token" : "bde97219cb60e3d111a18a9c17f7776449c1f3d7"},
+			// 	success: function(data) {
+			// 		$("#readme").load(data.download_url);
+			// 	}
+			// });
 			$.getJSON(PROJECT_URL + README_URL, function(data) {
 				$("#readme").load(data.download_url);
 			});
 			buildDirOrFile(PROJECT_URL + JSON_SCHEMA_URL, "tree");
 			setTimeout(function(){
-				$('#tree').jstree({		  		
+				$('#tree').jstree({	
+				  "search": {
+				  	"show_only_matches": true
+				  },	  		
 				  "plugins" : [
 				    "search", "sort"
 				  ]
