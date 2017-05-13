@@ -37,14 +37,19 @@
 		    editorSample.setTheme("ace/theme/eclipse");
 		    editorSample.getSession().setMode("ace/mode/json");
 
-		    function buildDirOrFile(data) {
+		    function buildDirOrFile(data, parentElement) {
 				$.each( data, function( key, parentVal ) {
-				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo($("#root"));
+				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo(parentElement);
 				    $("<ul id='ul" + parentVal.name + "'/>").appendTo($("#" + parentVal.name));
+					if(parentVal.type === 'dir') {
+						buildDirOrFile($('#ul' + parentVal.name));
+					}
+				    
 					$.getJSON(parentVal.url, function(data) {
 						var innerItems = [];
 						$.each( data, function( key, val ) {
-						    $("<li id='" + val.name + "'>" + val.name + "</li>").appendTo($('#ul' + parentVal.name));
+						    $("<li id='" + val.name + "'>" + val.name + "</li>")
+						    .appendTo($('#ul' + parentVal.name));
 						    itemNameToUrlMap[val.name] = val.download_url;					    
 						});				
 
@@ -57,7 +62,7 @@
 			});
 			$.getJSON(ANNA_DSB_PROJECT_URL + JSON_SCHEMA_URL, function(data) {
 				$("<ul id='root'/>").appendTo($("#tree"));
-				buildDirOrFile(data);				
+				buildDirOrFile(data, $("#root"));				
 			});
 
 			setTimeout(function(){
