@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/json-schema-faker/0.5.0-rc1/json-schema-faker.min.js">
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-json.js"></script>	
+	</head>
+	<body>
+		<h2>ANNA DSB GITHUB README</h2>
+		<div id="readme"></div>
+		<form id="s">
+		    <input type="search" id="q" />
+		    <button type="submit">Search</button>
+		</form>		
+		<div id="tree"></div>
+		<div style="width: 100%; height: 500px; margin: auto;">
+			<div id="sample" style="height: 500px; float: left; width: 50%"></div>
+			<div id="editor" style="height: 500px; width: 50%"></div>
+		</div>
+
+		<script type="text/javascript">
+			var ANNA_DSB_PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
+			var OPEN_ISSUES_URL = "issues?state=open";
+			var README_URL = "readme";
+			var JSON_SCHEMA_URL = "contents/UAT/JSON";
+			var itemNameToUrlMap = {};
+			var editor = ace.edit("editor");
+			editor.$blockScrolling = Infinity;		
+		    editor.setTheme("ace/theme/twilight");
+		    editor.getSession().setMode("ace/mode/json");		
+
+		    var editorSample = ace.edit("sample");
+			editorSample.$blockScrolling = Infinity;		
+		    editorSample.setTheme("ace/theme/eclipse");
+		    editorSample.getSession().setMode("ace/mode/json");
+
+			$.getJSON(ANNA_DSB_PROJECT_URL + README_URL, function(data) {
+				$("#readme").load(data.download_url);
+			});
+			$.getJSON(ANNA_DSB_PROJECT_URL + JSON_SCHEMA_URL, function(data) {
+				$("<ul id='root'/>").appendTo($("#tree"));
+				$.each( data, function( key, parentVal ) {
+				    $("<li id='" + parentVal.name + "'>" + parentVal.name + "</li>").appendTo($("#root"));
+				    $("<ul id='ul" + parentVal.name + "'/>").appendTo($("#" + parentVal.name));
+					$.getJSON(parentVal.url, function(data) {
+						var innerItems = [];
+						$.each( data, function( key, val ) {
+						    $("<li id='" + val.name + "'>" + val.name + "</li>").appendTo($('#ul' + parentVal.name));
+						    itemNameToUrlMap[val.name] = val.download_url;					    
+						});				
+
+					});
+				});					
+			});
+
+			setTimeout(function(){
+				$('#tree').jstree({
+				  "plugins" : [
+				    "search", "sort"
+				  ]
+				}).on("select_node.jstree", function(e, data) {
+					var schemaUrl = itemNameToUrlMap[data.node.id];
+					$.get(schemaUrl, function(data) {	
+						JSONSchemaFaker(JSON.parse(data)).then(function(sample) {
+							editorSample.setValue(JSON.stringify(sample, null, '\t'), 1);
+						});
+					    editor.setValue(data, 1);
+					});					
+				});	
+				
+				$("#s").submit(function(e) {
+				    e.preventDefault();
+				    $('#tree').jstree(true).search($("#q").val());
+				});				
+			}, 1000);
+
+		</script>
+
+	</body>
+</html>
