@@ -32,6 +32,8 @@
 			var PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
 			var JSON_SCHEMA_URL = "contents/UAT/JSON";
 
+			var ACCESS_TOKEN = "token 9aff9df75094dfee8a212b9cb40000510bc7fea4";
+
 			var OPEN_ISSUES_URL = "issues?state=open";
 			var README_URL = "readme";
 			var itemNameToUrlMap = {};
@@ -55,8 +57,18 @@
 		    // }
 		    // JSONSchemaFaker.option = jsonSchemaFakerOverride;
 
+		    function ajaxUsingToken(url, dataType, callback) {
+				$.ajax({
+					url: url,
+					type: 'GET',
+					dataType: dataType,
+					headers: {"Authorization" : ACCESS_TOKEN},
+					success: callback
+				});
+		    }
+
 			function buildDirOrFile(path, parentElementId) {
-				$.getJSON(path, function(data) {
+				ajaxUsingToken(path, 'json', function(data) {
 					$("<ul id='ul" + parentElementId + "'/>").appendTo($("#" + parentElementId));
 					$.each(data, function(key, val) {
 						var elementId = parentElementId + "_" + val.name;
@@ -71,18 +83,10 @@
 				});
 			}
 
-			// $.ajax({
-			// 	url: PROJECT_URL + README_URL,
-			// 	type: 'GET',
-			// 	dataType: 'json',
-			// 	headers: {"access_token" : "bde97219cb60e3d111a18a9c17f7776449c1f3d7"},
-			// 	success: function(data) {
-			// 		$("#readme").load(data.download_url);
-			// 	}
-			// });
-			$.getJSON(PROJECT_URL + README_URL, function(data) {
+			ajaxUsingToken(PROJECT_URL + README_URL, 'json', function(data) {
 				$("#readme").load(data.download_url);
 			});
+
 			buildDirOrFile(PROJECT_URL + JSON_SCHEMA_URL, "tree");
 			setTimeout(function(){
 				$('#tree').jstree({	
@@ -94,7 +98,7 @@
 				  ]
 				}).on("select_node.jstree", function(e, data) {
 					var schemaUrl = itemNameToUrlMap[data.node.id];
-					$.get(schemaUrl, function(data) {	
+					$.get(schemaUrl, function(data) {
 						JSONSchemaFaker(JSON.parse(data)).then(function(sample) {
 							editorSample.setValue(JSON.stringify(sample, null, '\t'), 1);
 						});
