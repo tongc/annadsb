@@ -27,6 +27,8 @@
 		</div>
 
 		<script type="text/javascript">
+			JSONSchemaFaker.option({alwaysFakeOptionals: true});
+
 			var PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
 			var JSON_SCHEMA_URL = "contents/UAT/JSON";
 
@@ -42,6 +44,16 @@
 			editorSample.$blockScrolling = Infinity;		
 		    editorSample.setTheme("ace/theme/eclipse");
 		    editorSample.getSession().setMode("ace/mode/json");
+
+		    // var jsonSchemaFakerOriginalOptions = JSONSchemaFaker.option;
+		    // function jsonSchemaFakerOverride(nameOrOptionMap) {
+		    // 	if(nameOrOptionMap === 'alwaysFakeOptionals') {
+		    // 		return true;
+		    // 	} else {
+		    // 		return jsonSchemaFakerOriginalOptions(nameOrOptionMap);
+		    // 	}
+		    // }
+		    // JSONSchemaFaker.option = jsonSchemaFakerOverride;
 
 			function buildDirOrFile(path, parentElementId) {
 				$.getJSON(path, function(data) {
