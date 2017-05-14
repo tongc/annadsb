@@ -3,7 +3,7 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/json-schema-faker/0.5.0-rc1/json-schema-faker.min.js">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/json-schema-faker/0.5.0-rc2/json-schema-faker.min.js">
 		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-json.js"></script>	
@@ -28,9 +28,10 @@
 
 		<script type="text/javascript">
 			var PROJECT_URL = "https://api.github.com/repos/ANNA-DSB/Product-Definitions/";
+			var JSON_SCHEMA_URL = "contents/UAT/JSON";
+
 			var OPEN_ISSUES_URL = "issues?state=open";
 			var README_URL = "readme";
-			var JSON_SCHEMA_URL = "contents/UAT/JSON";
 			var itemNameToUrlMap = {};
 			var editor = ace.edit("editor");
 			editor.$blockScrolling = Infinity;		
