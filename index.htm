@@ -12,7 +12,11 @@
 		</style>		
 	</head>
 	<body>
-		<h2>Github Readme</h2>
+		<a target="_blank" href="rates.png">rates</a>
+		<a target="_blank" href="commodities.png">commodities</a>
+		<a target="_blank" href="credit.png">credit</a>
+		<a target="_blank" href="equity.png">equity</a>
+		<a target="_blank" href="fx.png">fx</a>
 		<div id="readme"></div>
 		<p>
 			<form id="s">
@@ -84,7 +88,7 @@
 			}
 
 			ajaxUsingToken(PROJECT_URL + README_URL, 'json', function(data) {
-				$("#readme").load(data.download_url);
+				//$("#readme").load(data.download_url);
 			});
 
 			buildDirOrFile(PROJECT_URL + JSON_SCHEMA_URL, "tree");
